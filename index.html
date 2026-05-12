@@ -638,8 +638,11 @@ function buildReg(mc){
       <div class="ff"><label>เบอร์โทรศัพท์ <span class="req">*</span></label><input id="fp" type="tel" placeholder="0812345678" maxlength="10" inputmode="numeric"/></div>
       <div class="ff"><label>บริษัทผู้ส่งสินค้า <span class="req">*</span></label><input id="fc" type="text" placeholder="ชื่อบริษัท/ห้าง"/></div>
       <div class="ff"><label>ทะเบียนรถ <span class="req">*</span></label><input id="fl" type="text" placeholder="เช่น กข-1234" autocapitalize="characters"/></div>
-      <div class="ff" style="grid-column:1/-1"><label>สาขาแม็คโครที่มาส่ง <span class="req">*</span></label>
-        <select id="fb"><option value="">— เลือกสาขา —</option>${BR.map(b=>`<option value="${b.id}">${b.id} — ${b.n}</option>`).join('')}</select>
+      <div class="ff" style="grid-column:1/-1"><label>สาขาแม็คโครที่มาส่ง</label>
+        <div style="padding:13px 14px;background:var(--SUR2);border:2px solid var(--BD);border-radius:var(--RS);font-size:15px;font-weight:600;color:var(--TX);display:flex;align-items:center;gap:8px;">
+          <span style="font-size:18px">🏬</span>บมจ.ซีพี แอ็กซ์ตร้า สาขาพิษณุโลก 11
+        </div>
+        <input type="hidden" id="fb" value="0901"/>
       </div>
       <div class="ff" style="grid-column:1/-1"><label>ประเภทสินค้า <span class="req">*</span></label>
         <div class="g-chips" id="gCh">${GOODS.map(g=>`<div class="g-chip" data-g="${g.lb}">${g.ic} ${g.lb}</div>`).join('')}</div>
@@ -662,13 +665,13 @@ function buildReg(mc){
 }
 function clrReg(){
   ['fn','fp','fc','fl','fn2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  const s=document.getElementById('fb');if(s)s.value='';
+  // fb is fixed — no need to reset
   document.getElementById('fg').value='';
   document.querySelectorAll('#gCh .g-chip').forEach(x=>x.classList.remove('on'));
 }
 function subReg(){
   const name=v('fn'),ph=v('fp'),co=v('fc'),plate=v('fl'),brId=v('fb'),gds=v('fg'),note=v('fn2');
-  if(!name||!ph||!co||!plate||!brId||!gds){toast('กรุณากรอกข้อมูลให้ครบทุกช่องที่มี *','err');return;}
+  if(!name||!ph||!co||!plate||!gds){toast('กรุณากรอกข้อมูลให้ครบทุกช่องที่มี *','err');return;}
   const bObj=BR.find(b=>b.id===brId);
   const rec={id:Date.now(),qNum:nextQ(),date:isoToday(),tm:nowTm(),name,ph,co,plate,brId,brN:bObj?bObj.n:brId,gds,note,sts:'รอเรียก',user:CU.username};
   // Push ไปยัง Firebase (real-time sync ทุกเครื่อง)
@@ -848,10 +851,7 @@ function buildList(mc){
     <div class="table-toolbar">
       <div class="tbar-r1">
         <div class="srch-box"><input type="text" id="fS" placeholder="ชื่อ, ทะเบียน, บริษัท, เบอร์..." value="" inputmode="search"/></div>
-        <select id="fBr" class="flt-sel">
-          <option value="">ทุกสาขา</option>
-          ${BR.map(b=>`<option value="${b.id}">${b.id} — ${b.n}</option>`).join('')}
-        </select>
+        <!-- branch filter hidden — มีเพียงสาขาเดียว -->
         <select id="fSt" class="flt-sel">
           <option value="">ทุกสถานะ</option>
           ${STS.map(s=>`<option value="${s}">${s}</option>`).join('')}
@@ -962,7 +962,7 @@ function buildTags(){
   if(!el) return;
   const tags=[];
   if(F.s)  tags.push({lb:`🔍 "${F.s}"`, clr:()=>{F.s='';qsel('fS').value='';refTbl();}});
-  if(F.br){const b=BR.find(x=>x.id===F.br);tags.push({lb:`📍 ${b?b.n:F.br}`,clr:()=>{F.br='';qsel('fBr').value='';refTbl();}});}
+  // branch filter not shown (single branch)
   if(F.st) tags.push({lb:`${sDot(F.st)} ${F.st}`,clr:()=>{F.st='';qsel('fSt').value='';refTbl();}});
   if(F.d1) tags.push({lb:`📅 ตั้งแต่ ${fmtD(F.d1)}`,clr:()=>{F.d1='';qsel('fD1').value='';refTbl();}});
   if(F.d2) tags.push({lb:`📅 ถึง ${fmtD(F.d2)}`,clr:()=>{F.d2='';qsel('fD2').value='';refTbl();}});
@@ -1022,7 +1022,10 @@ function editRec(id){
     <div class="ff"><label>บริษัทผู้ส่งสินค้า</label><input type="text" id="ec" value="${esc(r.co)}"/></div>
     <div class="ff"><label>ทะเบียนรถ</label><input type="text" id="el" value="${esc(r.plate)}" autocapitalize="characters"/></div>
     <div class="ff" style="grid-column:1/-1"><label>สาขาแม็คโครที่มาส่ง</label>
-      <select id="eb">${BR.map(b=>`<option value="${b.id}"${r.brId===b.id?' selected':''}>${b.id} — ${b.n}</option>`).join('')}</select>
+      <div style="padding:13px 14px;background:var(--SUR2);border:2px solid var(--BD);border-radius:var(--RS);font-size:15px;font-weight:600;color:var(--TX);display:flex;align-items:center;gap:8px;">
+        <span style="font-size:18px">🏬</span>บมจ.ซีพี แอ็กซ์ตร้า สาขาพิษณุโลก 11
+      </div>
+      <input type="hidden" id="eb" value="0901"/>
     </div>
     <div class="ff" style="grid-column:1/-1"><label>ประเภทสินค้า</label>
       <div class="g-chips" id="eCh">${GOODS.map(g=>`<div class="g-chip${r.gds===g.lb?' on':''}" data-g="${g.lb}">${g.ic} ${g.lb}</div>`).join('')}</div>
@@ -1052,7 +1055,7 @@ function editRec(id){
 function saveEdit(id){
   const r=REC.find(x=>x.id===id);if(!r)return;
   const name=v('en'),ph=v('ep'),co=v('ec'),plate=v('el'),brId=v('eb'),gds=v('eg'),note=v('enote');
-  if(!name||!ph||!co||!plate||!brId||!gds){toast('กรุณากรอกข้อมูลให้ครบ','err');return;}
+  if(!name||!ph||!co||!plate||!gds){toast('กรุณากรอกข้อมูลให้ครบ','err');return;}
   r.name=name;r.ph=ph;r.co=co;r.plate=plate;
   r.brId=brId;r.brN=(BR.find(b=>b.id===brId)||{n:brId}).n;
   r.gds=gds;r.note=note;
