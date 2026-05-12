@@ -530,12 +530,18 @@ QUEUE_REF.on('value', snapshot => {
   }
   _fbLoaded = true;
   saveRec();
-  // Refresh UI ถ้าอยู่ใน tab ที่แสดงข้อมูล
-  const mc = document.getElementById('MC');
-  if(!mc || !_tab) return;
-  if(_tab==='queue_list') refTbl();
-  else if(_tab==='dashboard') buildDash(mc);
-  else if(_tab==='my_queue') buildMine(mc);
+  // Refresh UI — ใช้ setTimeout เพื่อให้แน่ใจว่า DOM พร้อมแล้ว
+  setTimeout(()=>{
+    const mc = document.getElementById('MC');
+    if(!mc || !_tab) return;
+    if(_tab==='queue_list'){
+      // ถ้า tblWrap มีอยู่แล้ว = buildList ทำงานแล้ว → refresh แค่ tbody
+      if(document.getElementById('tblWrap')) refTbl();
+      else buildList(mc); // ยังไม่ได้ build → build ใหม่
+    }
+    else if(_tab==='dashboard') buildDash(mc);
+    else if(_tab==='my_queue') buildMine(mc);
+  }, 50);
 });
 
 /* ============================================================
@@ -665,7 +671,7 @@ function buildReg(mc){
 }
 function clrReg(){
   ['fn','fp','fc','fl','fn2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  // fb is fixed — no need to reset
+  // fb is fixed hidden — no reset needed
   document.getElementById('fg').value='';
   document.querySelectorAll('#gCh .g-chip').forEach(x=>x.classList.remove('on'));
 }
@@ -851,7 +857,7 @@ function buildList(mc){
     <div class="table-toolbar">
       <div class="tbar-r1">
         <div class="srch-box"><input type="text" id="fS" placeholder="ชื่อ, ทะเบียน, บริษัท, เบอร์..." value="" inputmode="search"/></div>
-        <!-- branch filter hidden — มีเพียงสาขาเดียว -->
+        <!-- branch selector hidden: single branch only -->
         <select id="fSt" class="flt-sel">
           <option value="">ทุกสถานะ</option>
           ${STS.map(s=>`<option value="${s}">${s}</option>`).join('')}
@@ -874,23 +880,28 @@ function buildList(mc){
     <div class="tbl-wrap" id="tblWrap"></div>
   </div>`;
 
-  /* Set values from F state AFTER innerHTML is set */
-  qsel('fS').value=F.s;
-  qsel('fBr').value=F.br;
-  qsel('fSt').value=F.st;
-  qsel('fD1').value=F.d1;
-  qsel('fD2').value=F.d2;
+  /* Set values from F state AFTER innerHTML is set — safe null check */
+  const _fS=qsel('fS'), _fBr=qsel('fBr'), _fSt=qsel('fSt');
+  const _fD1=qsel('fD1'), _fD2=qsel('fD2');
+  if(_fS)  _fS.value=F.s;
+  if(_fBr) _fBr.value=F.br;
+  if(_fSt) _fSt.value=F.st;
+  if(_fD1) _fD1.value=F.d1;
+  if(_fD2) _fD2.value=F.d2;
 
-  /* Attach events — imperative, never inline */
-  qsel('fS').addEventListener('input', e=>{F.s=e.target.value;  refTbl();});
-  qsel('fBr').addEventListener('change',e=>{F.br=e.target.value; refTbl();});
-  qsel('fSt').addEventListener('change',e=>{F.st=e.target.value; refTbl();});
-  qsel('fD1').addEventListener('change',e=>{F.d1=e.target.value; refTbl();});
-  qsel('fD2').addEventListener('change',e=>{F.d2=e.target.value; refTbl();});
+  /* Attach events — safe null check */
+  if(_fS)  _fS.addEventListener('input',  e=>{F.s=e.target.value;  refTbl();});
+  if(_fBr) _fBr.addEventListener('change',e=>{F.br=e.target.value; refTbl();});
+  if(_fSt) _fSt.addEventListener('change',e=>{F.st=e.target.value; refTbl();});
+  if(_fD1) _fD1.addEventListener('change',e=>{F.d1=e.target.value; refTbl();});
+  if(_fD2) _fD2.addEventListener('change',e=>{F.d2=e.target.value; refTbl();});
   qsel('btnClr').addEventListener('click',()=>{
     clearF();
-    qsel('fS').value=''; qsel('fBr').value=''; qsel('fSt').value='';
-    qsel('fD1').value=''; qsel('fD2').value='';
+    if(qsel('fS'))  qsel('fS').value='';
+    if(qsel('fBr')) qsel('fBr').value='';
+    if(qsel('fSt')) qsel('fSt').value='';
+    if(qsel('fD1')) qsel('fD1').value='';
+    if(qsel('fD2')) qsel('fD2').value='';
     refTbl();
   });
   qsel('btnExp').addEventListener('click',doExport);
@@ -962,7 +973,7 @@ function buildTags(){
   if(!el) return;
   const tags=[];
   if(F.s)  tags.push({lb:`🔍 "${F.s}"`, clr:()=>{F.s='';qsel('fS').value='';refTbl();}});
-  // branch filter not shown (single branch)
+  // branch filter not applicable (single branch only)
   if(F.st) tags.push({lb:`${sDot(F.st)} ${F.st}`,clr:()=>{F.st='';qsel('fSt').value='';refTbl();}});
   if(F.d1) tags.push({lb:`📅 ตั้งแต่ ${fmtD(F.d1)}`,clr:()=>{F.d1='';qsel('fD1').value='';refTbl();}});
   if(F.d2) tags.push({lb:`📅 ถึง ${fmtD(F.d2)}`,clr:()=>{F.d2='';qsel('fD2').value='';refTbl();}});
