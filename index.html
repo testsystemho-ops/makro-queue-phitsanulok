@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0055B8">
+<meta name="theme-color" content="#E8231A">
 <title>Makro — ระบบคิวรถขนส่งสินค้า</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=Kanit:wght@500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -17,16 +17,26 @@
    ROOT & RESET
 ===================================================== */
 :root{
-  --P:#0055B8; --PL:#e6f0ff; --PD:#003d87;
-  --A:#FF6B00; --AL:#fff3e8;
-  --G:#00A86B; --GL:#e6f7f1;
-  --IN:#4F46E5; --INL:#EEF2FF;
-  --W:#F59E0B; --D:#EF4444;
-  --BG:#EEF3FB; --SUR:#fff; --SUR2:#F5F8FD;
-  --BD:#DDE6F5; --TX:#111827; --TX2:#3D4F72; --TX3:#8493B0;
-  --SH0:0 1px 3px rgba(0,50,160,.06);
-  --SH1:0 4px 16px rgba(0,50,160,.10);
-  --SH2:0 12px 40px rgba(0,50,160,.16);
+  /* ── Red-Orange brand palette ── */
+  --P:#E8231A;          /* primary red */
+  --PL:#FFF0EE;         /* primary light blush */
+  --PD:#A50D1E;         /* primary dark crimson */
+  --PG:linear-gradient(135deg,#E8152A 0%,#E8341A 50%,#F55A1E 100%); /* gradient */
+  --A:#FF8C00;          /* amber accent */
+  --AL:#FFF4E0;
+  --G:#00A86B; --GL:#e6f7f1;   /* success green — keep semantic */
+  --IN:#9B2335; --INL:#FFE8EA; /* indigo slot → dark rose */
+  --W:#F59E0B; --D:#B91C1C;    /* warning / danger */
+  --BG:#FDF3F2;         /* page background — very warm off-white */
+  --SUR:#ffffff;
+  --SUR2:#FDF6F5;       /* card secondary bg */
+  --BD:#F5D5D2;         /* border — warm pink-grey */
+  --TX:#1A0A08;         /* near-black with warm tint */
+  --TX2:#6B2A24;        /* body text — dark rose-brown */
+  --TX3:#B07A74;        /* muted text */
+  --SH0:0 1px 3px rgba(180,30,20,.07);
+  --SH1:0 4px 16px rgba(180,30,20,.12);
+  --SH2:0 12px 40px rgba(180,30,20,.18);
   --R:16px; --RS:10px; --RX:6px;
   /* safe-area for notched phones */
   --sat:env(safe-area-inset-top,0px);
@@ -49,7 +59,7 @@ input,select,textarea{font-size:16px;}
 ===================================================== */
 #loginScreen{
   min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(145deg,#071535,#0c2060 55%,#083a90);
+  background:linear-gradient(145deg,#1A0305,#8B0D18 45%,#C82010 75%,#E8451A 100%);
   padding:20px calc(20px + var(--sal)) 20px calc(20px + var(--sar));
   position:relative;overflow:hidden;
 }
@@ -72,10 +82,10 @@ input,select,textarea{font-size:16px;}
 .fg label{display:block;font-size:13px;font-weight:700;color:var(--TX2);margin-bottom:6px;}
 .fg input{width:100%;padding:13px 16px;border:2px solid var(--BD);border-radius:var(--RS);
   font-size:16px;color:var(--TX);background:var(--SUR);transition:all .2s;outline:none;}
-.fg input:focus{border-color:var(--P);box-shadow:0 0 0 4px rgba(0,85,184,.1);}
-.btn-login{width:100%;padding:14px;background:var(--P);color:#fff;border:none;border-radius:var(--RS);
+.fg input:focus{border-color:var(--P);box-shadow:0 0 0 4px rgba(232,35,26,.15);}
+.btn-login{width:100%;padding:14px;background:var(--PG);color:#fff;border:none;border-radius:var(--RS);
   font-family:'Kanit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;transition:all .25s;
-  letter-spacing:1px;margin-top:4px;min-height:52px;}
+  letter-spacing:1px;margin-top:4px;min-height:52px;box-shadow:0 4px 16px rgba(232,35,26,.4);}
 .btn-login:active{transform:scale(.98);}
 .cred-box{margin-top:16px;padding:14px;background:var(--SUR2);border:1px solid var(--BD);border-radius:var(--RS);}
 .cred-ttl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--TX2);margin-bottom:10px;}
@@ -146,7 +156,7 @@ main#MC{
   color:var(--TX3);cursor:pointer;background:none;border:none;transition:all .15s;
   min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .mb .mi{font-size:22px;display:block;margin-bottom:2px;}
-.mb.on{background:var(--PL);color:var(--P);}
+.mb.on{background:var(--PL);color:var(--PD);font-weight:800;}
 
 /* =====================================================
    ANIMATIONS
@@ -167,8 +177,8 @@ main#MC{
   font-weight:700;cursor:pointer;border:none;transition:all .2s;display:inline-flex;
   align-items:center;gap:6px;white-space:nowrap;-webkit-user-select:none;user-select:none;}
 .btn:active{transform:scale(.97);}
-.btn-p{background:var(--P);color:#fff;}
-.btn-p:hover{background:var(--PD);box-shadow:0 4px 14px rgba(0,85,184,.3);}
+.btn-p{background:var(--PG);color:#fff;box-shadow:0 2px 8px rgba(232,35,26,.25);}
+.btn-p:hover{background:var(--PD);box-shadow:0 4px 16px rgba(232,35,26,.4);}
 .btn-s{background:var(--SUR2);color:var(--TX2);border:1px solid var(--BD);}
 .btn-s:hover,.btn-s:active{background:var(--BD);}
 .btn-g{background:var(--G);color:#fff;}
@@ -192,7 +202,7 @@ main#MC{
   /* iOS fix */
   -webkit-appearance:none;
 }
-.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--P);box-shadow:0 0 0 3px rgba(0,85,184,.1);}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--P);box-shadow:0 0 0 3px rgba(232,35,26,.12);}
 .ff textarea{resize:vertical;min-height:80px;}
 .ff select{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%233D4F72' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
@@ -206,14 +216,14 @@ main#MC{
   font-size:14px;font-weight:600;color:var(--TX2);transition:all .15s;background:var(--SUR2);
   display:flex;align-items:center;gap:6px;-webkit-user-select:none;user-select:none;
   min-height:44px;/* iOS touch target */}
-.g-chip:hover,.g-chip:active{border-color:var(--P);color:var(--P);background:var(--PL);}
-.g-chip.on{border-color:var(--P);background:var(--PL);color:var(--P);}
+.g-chip:hover,.g-chip:active{border-color:var(--P);color:var(--PD);background:var(--PL);}
+.g-chip.on{border-color:var(--P);background:var(--PL);color:var(--PD);font-weight:700;}
 
 /* QUEUE BANNER */
-.q-banner{background:linear-gradient(130deg,#0055B8,#003585);color:#fff;border-radius:var(--R);
+.q-banner{background:var(--PG);color:#fff;border-radius:var(--R);
   padding:clamp(20px,4vw,26px) clamp(20px,4vw,32px);margin-bottom:20px;
   display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 8px 28px rgba(0,85,184,.35);position:relative;overflow:hidden;}
+  box-shadow:0 8px 28px rgba(232,35,26,.38);position:relative;overflow:hidden;}
 .q-banner::before{content:'';position:absolute;right:-20px;top:-40px;width:180px;height:180px;
   border-radius:50%;background:rgba(255,255,255,.07);}
 .qb-lbl{font-size:14px;opacity:.8;margin-bottom:6px;}
@@ -233,7 +243,7 @@ main#MC{
 .stat-lbl{font-size:11px;color:var(--TX3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
 .stat-val{font-family:'Kanit',sans-serif;font-size:clamp(28px,6vw,36px);font-weight:800;color:var(--TX);line-height:1;}
 .stat-sub{font-size:12px;color:var(--TX3);margin-top:4px;}
-.stat-hint{font-size:11px;color:var(--P);margin-top:6px;font-weight:700;opacity:.8;}
+.stat-hint{font-size:11px;color:var(--P);margin-top:6px;font-weight:700;opacity:.9;}
 .c-blue{border-top-color:var(--P);}
 .c-orange{border-top-color:var(--A);}
 .c-indigo{border-top-color:var(--IN);}
@@ -249,10 +259,10 @@ main#MC{
 .chart-hd h3{font-family:'Kanit',sans-serif;font-size:clamp(14px,3.5vw,16px);font-weight:700;}
 .bar-wrap{display:flex;align-items:flex-end;gap:5px;height:clamp(130px,22vw,170px);padding:0 2px;}
 .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;}
-.bar-v{font-size:clamp(10px,2vw,12px);font-weight:800;color:var(--P);min-height:14px;text-align:center;}
+.bar-v{font-size:clamp(10px,2vw,12px);font-weight:800;color:var(--PD);min-height:14px;text-align:center;}
 .bar-b{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .5s cubic-bezier(.34,1.56,.64,1);}
-.bar-b.td{background:var(--A);}
-.bar-b.pt{background:var(--P);opacity:.6;}
+.bar-b.td{background:linear-gradient(180deg,#F55A1E,#E8152A);}
+.bar-b.pt{background:var(--P);opacity:.55;}
 .bar-ax{font-size:clamp(9px,2vw,11px);color:var(--TX3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;text-align:center;}
 
 /* =====================================================
@@ -270,7 +280,7 @@ main#MC{
 .srch-box{position:relative;flex:1;min-width:min(100%,180px);max-width:280px;}
 .srch-box input{width:100%;padding:10px 14px 10px 36px;border:1.5px solid var(--BD);border-radius:var(--RS);
   font-size:14px;outline:none;transition:border-color .2s;background:#fff;min-height:42px;}
-.srch-box input:focus{border-color:var(--P);}
+.srch-box input:focus{border-color:var(--P);box-shadow:0 0 0 3px rgba(232,35,26,.12);}
 .srch-box::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);
   font-size:13px;pointer-events:none;}
 
@@ -292,7 +302,7 @@ main#MC{
 .ftags{display:none;flex-wrap:wrap;gap:6px;padding:10px 16px 4px;}
 .ftag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;
   background:var(--PL);color:var(--P);border-radius:20px;font-size:12px;font-weight:700;}
-.ftag button{background:none;border:none;cursor:pointer;color:var(--P);font-size:14px;
+.ftag button{background:none;border:none;cursor:pointer;color:var(--PD);font-size:14px;
   line-height:1;padding:0;opacity:.7;min-width:18px;min-height:18px;}
 
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
@@ -304,7 +314,7 @@ tbody tr{border-bottom:1px solid var(--BD);transition:background .12s;}
 tbody tr:hover,tbody tr:active{background:var(--PL);}
 tbody td{padding:11px 12px;color:var(--TX);vertical-align:middle;}
 
-.q-bdg{display:inline-flex;align-items:center;justify-content:center;background:var(--P);color:#fff;
+.q-bdg{display:inline-flex;align-items:center;justify-content:center;background:var(--PG);color:#fff;
   border-radius:7px;font-family:'Kanit',sans-serif;font-weight:800;font-size:13px;
   width:38px;height:28px;}
 .s-bdg{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;
@@ -314,7 +324,7 @@ tbody td{padding:11px 12px;color:var(--TX);vertical-align:middle;}
 .s-d{background:#D1FAE5;color:#065F46;}
 .g-tag{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:5px;
   font-size:11px;font-weight:600;background:var(--PL);color:var(--P);}
-.br-tag{font-size:10px;font-weight:800;background:#F0F4FF;color:var(--P);padding:2px 6px;border-radius:4px;}
+.br-tag{font-size:10px;font-weight:800;background:var(--PL);color:var(--PD);padding:2px 6px;border-radius:4px;}
 .acts{display:flex;gap:5px;}
 
 .sts-sel{
@@ -530,18 +540,12 @@ QUEUE_REF.on('value', snapshot => {
   }
   _fbLoaded = true;
   saveRec();
-  // Refresh UI — ใช้ setTimeout เพื่อให้แน่ใจว่า DOM พร้อมแล้ว
-  setTimeout(()=>{
-    const mc = document.getElementById('MC');
-    if(!mc || !_tab) return;
-    if(_tab==='queue_list'){
-      // ถ้า tblWrap มีอยู่แล้ว = buildList ทำงานแล้ว → refresh แค่ tbody
-      if(document.getElementById('tblWrap')) refTbl();
-      else buildList(mc); // ยังไม่ได้ build → build ใหม่
-    }
-    else if(_tab==='dashboard') buildDash(mc);
-    else if(_tab==='my_queue') buildMine(mc);
-  }, 50);
+  // Refresh UI ถ้าอยู่ใน tab ที่แสดงข้อมูล
+  const mc = document.getElementById('MC');
+  if(!mc || !_tab) return;
+  if(_tab==='queue_list') refTbl();
+  else if(_tab==='dashboard') buildDash(mc);
+  else if(_tab==='my_queue') buildMine(mc);
 });
 
 /* ============================================================
@@ -644,11 +648,8 @@ function buildReg(mc){
       <div class="ff"><label>เบอร์โทรศัพท์ <span class="req">*</span></label><input id="fp" type="tel" placeholder="0812345678" maxlength="10" inputmode="numeric"/></div>
       <div class="ff"><label>บริษัทผู้ส่งสินค้า <span class="req">*</span></label><input id="fc" type="text" placeholder="ชื่อบริษัท/ห้าง"/></div>
       <div class="ff"><label>ทะเบียนรถ <span class="req">*</span></label><input id="fl" type="text" placeholder="เช่น กข-1234" autocapitalize="characters"/></div>
-      <div class="ff" style="grid-column:1/-1"><label>สาขาแม็คโครที่มาส่ง</label>
-        <div style="padding:13px 14px;background:var(--SUR2);border:2px solid var(--BD);border-radius:var(--RS);font-size:15px;font-weight:600;color:var(--TX);display:flex;align-items:center;gap:8px;">
-          <span style="font-size:18px">🏬</span>บมจ.ซีพี แอ็กซ์ตร้า สาขาพิษณุโลก 11
-        </div>
-        <input type="hidden" id="fb" value="0901"/>
+      <div class="ff" style="grid-column:1/-1"><label>สาขาแม็คโครที่มาส่ง <span class="req">*</span></label>
+        <select id="fb"><option value="">— เลือกสาขา —</option>${BR.map(b=>`<option value="${b.id}">${b.id} — ${b.n}</option>`).join('')}</select>
       </div>
       <div class="ff" style="grid-column:1/-1"><label>ประเภทสินค้า <span class="req">*</span></label>
         <div class="g-chips" id="gCh">${GOODS.map(g=>`<div class="g-chip" data-g="${g.lb}">${g.ic} ${g.lb}</div>`).join('')}</div>
@@ -671,13 +672,13 @@ function buildReg(mc){
 }
 function clrReg(){
   ['fn','fp','fc','fl','fn2'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  // fb is fixed hidden — no reset needed
+  const s=document.getElementById('fb');if(s)s.value='';
   document.getElementById('fg').value='';
   document.querySelectorAll('#gCh .g-chip').forEach(x=>x.classList.remove('on'));
 }
 function subReg(){
   const name=v('fn'),ph=v('fp'),co=v('fc'),plate=v('fl'),brId=v('fb'),gds=v('fg'),note=v('fn2');
-  if(!name||!ph||!co||!plate||!gds){toast('กรุณากรอกข้อมูลให้ครบทุกช่องที่มี *','err');return;}
+  if(!name||!ph||!co||!plate||!brId||!gds){toast('กรุณากรอกข้อมูลให้ครบทุกช่องที่มี *','err');return;}
   const bObj=BR.find(b=>b.id===brId);
   const rec={id:Date.now(),qNum:nextQ(),date:isoToday(),tm:nowTm(),name,ph,co,plate,brId,brN:bObj?bObj.n:brId,gds,note,sts:'รอเรียก',user:CU.username};
   // Push ไปยัง Firebase (real-time sync ทุกเครื่อง)
@@ -773,7 +774,7 @@ function buildDash(mc){
   </div>
 
   <div class="chart-card">
-    <div class="chart-hd"><h3>📈 จำนวนรถขนส่งรายวัน (7 วันล่าสุด)</h3><span style="font-size:11px;color:var(--TX3)">🟠 วันนี้</span></div>
+    <div class="chart-hd"><h3>📈 จำนวนรถขนส่งรายวัน (7 วันล่าสุด)</h3><span style="font-size:11px;color:var(--TX3)">🔴 วันนี้</span></div>
     <div class="bar-wrap">
       ${days.map(d=>`<div class="bar-col">
         <div class="bar-v">${d.count||''}</div>
@@ -791,7 +792,7 @@ function buildDash(mc){
         ${Object.entries(gc).sort((a,b)=>b[1]-a[1]).map(([g,c])=>`
         <div style="display:flex;align-items:center;gap:8px;background:var(--PL);padding:10px 14px;border-radius:10px;cursor:pointer" data-goodsfilter="${g}">
           <span style="font-size:20px">${gIco(g)}</span>
-          <div><div style="font-size:20px;font-weight:800;color:var(--P);font-family:'Kanit',sans-serif;line-height:1">${c}</div>
+          <div><div style="font-size:20px;font-weight:800;color:var(--PD);font-family:'Kanit',sans-serif;line-height:1">${c}</div>
           <div style="font-size:12px;color:var(--TX2)">${g}</div></div>
         </div>`).join('')}
       </div>`}
@@ -857,7 +858,10 @@ function buildList(mc){
     <div class="table-toolbar">
       <div class="tbar-r1">
         <div class="srch-box"><input type="text" id="fS" placeholder="ชื่อ, ทะเบียน, บริษัท, เบอร์..." value="" inputmode="search"/></div>
-        <!-- branch selector hidden: single branch only -->
+        <select id="fBr" class="flt-sel">
+          <option value="">ทุกสาขา</option>
+          ${BR.map(b=>`<option value="${b.id}">${b.id} — ${b.n}</option>`).join('')}
+        </select>
         <select id="fSt" class="flt-sel">
           <option value="">ทุกสถานะ</option>
           ${STS.map(s=>`<option value="${s}">${s}</option>`).join('')}
@@ -880,28 +884,23 @@ function buildList(mc){
     <div class="tbl-wrap" id="tblWrap"></div>
   </div>`;
 
-  /* Set values from F state AFTER innerHTML is set — safe null check */
-  const _fS=qsel('fS'), _fBr=qsel('fBr'), _fSt=qsel('fSt');
-  const _fD1=qsel('fD1'), _fD2=qsel('fD2');
-  if(_fS)  _fS.value=F.s;
-  if(_fBr) _fBr.value=F.br;
-  if(_fSt) _fSt.value=F.st;
-  if(_fD1) _fD1.value=F.d1;
-  if(_fD2) _fD2.value=F.d2;
+  /* Set values from F state AFTER innerHTML is set */
+  qsel('fS').value=F.s;
+  qsel('fBr').value=F.br;
+  qsel('fSt').value=F.st;
+  qsel('fD1').value=F.d1;
+  qsel('fD2').value=F.d2;
 
-  /* Attach events — safe null check */
-  if(_fS)  _fS.addEventListener('input',  e=>{F.s=e.target.value;  refTbl();});
-  if(_fBr) _fBr.addEventListener('change',e=>{F.br=e.target.value; refTbl();});
-  if(_fSt) _fSt.addEventListener('change',e=>{F.st=e.target.value; refTbl();});
-  if(_fD1) _fD1.addEventListener('change',e=>{F.d1=e.target.value; refTbl();});
-  if(_fD2) _fD2.addEventListener('change',e=>{F.d2=e.target.value; refTbl();});
+  /* Attach events — imperative, never inline */
+  qsel('fS').addEventListener('input', e=>{F.s=e.target.value;  refTbl();});
+  qsel('fBr').addEventListener('change',e=>{F.br=e.target.value; refTbl();});
+  qsel('fSt').addEventListener('change',e=>{F.st=e.target.value; refTbl();});
+  qsel('fD1').addEventListener('change',e=>{F.d1=e.target.value; refTbl();});
+  qsel('fD2').addEventListener('change',e=>{F.d2=e.target.value; refTbl();});
   qsel('btnClr').addEventListener('click',()=>{
     clearF();
-    if(qsel('fS'))  qsel('fS').value='';
-    if(qsel('fBr')) qsel('fBr').value='';
-    if(qsel('fSt')) qsel('fSt').value='';
-    if(qsel('fD1')) qsel('fD1').value='';
-    if(qsel('fD2')) qsel('fD2').value='';
+    qsel('fS').value=''; qsel('fBr').value=''; qsel('fSt').value='';
+    qsel('fD1').value=''; qsel('fD2').value='';
     refTbl();
   });
   qsel('btnExp').addEventListener('click',doExport);
@@ -973,7 +972,7 @@ function buildTags(){
   if(!el) return;
   const tags=[];
   if(F.s)  tags.push({lb:`🔍 "${F.s}"`, clr:()=>{F.s='';qsel('fS').value='';refTbl();}});
-  // branch filter not applicable (single branch only)
+  if(F.br){const b=BR.find(x=>x.id===F.br);tags.push({lb:`📍 ${b?b.n:F.br}`,clr:()=>{F.br='';qsel('fBr').value='';refTbl();}});}
   if(F.st) tags.push({lb:`${sDot(F.st)} ${F.st}`,clr:()=>{F.st='';qsel('fSt').value='';refTbl();}});
   if(F.d1) tags.push({lb:`📅 ตั้งแต่ ${fmtD(F.d1)}`,clr:()=>{F.d1='';qsel('fD1').value='';refTbl();}});
   if(F.d2) tags.push({lb:`📅 ถึง ${fmtD(F.d2)}`,clr:()=>{F.d2='';qsel('fD2').value='';refTbl();}});
@@ -1033,10 +1032,7 @@ function editRec(id){
     <div class="ff"><label>บริษัทผู้ส่งสินค้า</label><input type="text" id="ec" value="${esc(r.co)}"/></div>
     <div class="ff"><label>ทะเบียนรถ</label><input type="text" id="el" value="${esc(r.plate)}" autocapitalize="characters"/></div>
     <div class="ff" style="grid-column:1/-1"><label>สาขาแม็คโครที่มาส่ง</label>
-      <div style="padding:13px 14px;background:var(--SUR2);border:2px solid var(--BD);border-radius:var(--RS);font-size:15px;font-weight:600;color:var(--TX);display:flex;align-items:center;gap:8px;">
-        <span style="font-size:18px">🏬</span>บมจ.ซีพี แอ็กซ์ตร้า สาขาพิษณุโลก 11
-      </div>
-      <input type="hidden" id="eb" value="0901"/>
+      <select id="eb">${BR.map(b=>`<option value="${b.id}"${r.brId===b.id?' selected':''}>${b.id} — ${b.n}</option>`).join('')}</select>
     </div>
     <div class="ff" style="grid-column:1/-1"><label>ประเภทสินค้า</label>
       <div class="g-chips" id="eCh">${GOODS.map(g=>`<div class="g-chip${r.gds===g.lb?' on':''}" data-g="${g.lb}">${g.ic} ${g.lb}</div>`).join('')}</div>
@@ -1066,7 +1062,7 @@ function editRec(id){
 function saveEdit(id){
   const r=REC.find(x=>x.id===id);if(!r)return;
   const name=v('en'),ph=v('ep'),co=v('ec'),plate=v('el'),brId=v('eb'),gds=v('eg'),note=v('enote');
-  if(!name||!ph||!co||!plate||!gds){toast('กรุณากรอกข้อมูลให้ครบ','err');return;}
+  if(!name||!ph||!co||!plate||!brId||!gds){toast('กรุณากรอกข้อมูลให้ครบ','err');return;}
   r.name=name;r.ph=ph;r.co=co;r.plate=plate;
   r.brId=brId;r.brN=(BR.find(b=>b.id===brId)||{n:brId}).n;
   r.gds=gds;r.note=note;
@@ -1133,8 +1129,8 @@ function toast(msg,type='ok'){
   overlay.id = 'fbLoading';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(255,255,255,.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:Sarabun,sans-serif;';
   overlay.innerHTML = `
-    <div style="width:48px;height:48px;border:4px solid #e6f0ff;border-top:4px solid #0055B8;border-radius:50%;animation:spin .8s linear infinite"></div>
-    <div style="font-size:15px;font-weight:700;color:#0055B8">กำลังเชื่อมต่อฐานข้อมูล...</div>
+    <div style="width:48px;height:48px;border:4px solid #e6f0ff;border-top:4px solid #E8231A;border-radius:50%;animation:spin .8s linear infinite"></div>
+    <div style="font-size:15px;font-weight:700;background:linear-gradient(135deg,#E8152A,#F55A1E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">กำลังเชื่อมต่อฐานข้อมูล...</div>
     <div style="font-size:13px;color:#8493B0">Firebase Realtime Database</div>
     <style>@keyframes spin{to{transform:rotate(360deg)}}</style>`;
   document.body.appendChild(overlay);
